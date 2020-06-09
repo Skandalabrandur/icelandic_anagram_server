@@ -1,0 +1,114 @@
+<!doctype html>
+
+<!-- Forgive me father for I have sinned -->
+<!-- Djös ógeðslega skjal sem þetta er orðið -->
+<!-- Nenni ekki að gera þetta fallegt því letin er of sterk -->
+ 
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Íslenskar umraðanir</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!--Single file laziness best laziness -->
+    <style>
+      #spinnyboi {
+        display: none;
+      }
+      .anagrammos {
+        padding-top: 20px;
+        font-size: 1.3rem;
+      }
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      
+      body {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #a8c4f7;
+      }
+      
+      .form-searchin {
+        width: 100%;
+        max-width: 500px;
+        padding: 15px;
+        margin: auto;
+      }
+
+      .form-searchin .form-control {
+        position: relative;
+        box-sizing: border-box;
+        height: auto;
+        padding: 10px;
+        font-size: 16px;
+      }
+      .form-searchin .form-control:focus {
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body class="text-center">
+    <form class="form-searchin">
+  <h1 class="h3 mb-3 font-weight-normal">Leita að umröðunum</h1>
+  <p>Umröðun inniheldur alla stafi fyrir gefna setningu</p>
+  <label for="sentence" class="sr-only">Setning</label>
+  <input type="text" name="sentence" id="sentence" class="form-control" placeholder="Leita að setningu" required autofocus>
+  <button class="btn btn-lg btn-danger btn-block" type="submit">Leita</button>
+
+  <div>
+   <div class="anagrammos">
+      <div id="spinnyboi">
+        <div class="spinner-border" role="status">
+        </div>
+        <p>Reikna niðurstöður...</p>
+      </div>
+      <hr/>
+      <div id="results">
+      </div>
+    </div>
+  </div>
+</form>
+</body>
+<script>
+  //all hail vanilla js
+
+  let form = document.getElementsByClassName("form-searchin")[0];
+  form.onsubmit = function(e) {
+    e.preventDefault();
+
+    let spinner = document.getElementById("spinnyboi");
+    spinner.style.display = "block";
+
+    let resultDiv = document.getElementById("results");
+    while(resultDiv.firstChild) {
+      resultDiv.removeChild(resultDiv.firstChild);
+    }
+
+    let query = document.getElementById("sentence").value;
+
+    fetch(`api/${query}`).then(response => response.json()).then((grammos) => {
+      for(const gram of grammos) {
+        let el = document.createElement("p");
+        el.textContent = gram.join(" ");
+        resultDiv.appendChild(el);
+      }
+      spinner.style.display = "none";
+    });
+  }
+</script>
+</html>
